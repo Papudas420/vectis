@@ -8,19 +8,14 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 import { DiscoveryModule } from "./discovery.js";
 import { SandboxModule } from "./sandbox.js";
-import { Logger } from "./logger.js";
 import { z } from "zod";
 
 class VectisServer {
     private server: Server;
     private discovery: DiscoveryModule;
     private sandbox: SandboxModule;
-    private logger: Logger;
 
     constructor() {
-        this.logger = Logger.getInstance();
-        this.logger.info("Initializing Vectis MCP Server...");
-
         this.server = new Server(
             {
                 name: "vectis",
@@ -39,28 +34,29 @@ class VectisServer {
         this.setupToolHandlers();
 
         // Error handling
-        this.server.onerror = (error) => this.logger.error("MCP Protocol Error", error);
+        this.server.onerror = (error) => console.error("[MCP Protocol Error]", error);
 
         process.on('SIGINT', async () => {
-            this.logger.info("Server shutting down (SIGINT)...");
             await this.sandbox.cleanupAll();
-            await this.logger.shutdown();
             process.exit(0);
         });
 
         process.on('unhandledRejection', (reason, promise) => {
-            this.logger.error("Unhandled Rejection at Promise", { promise, reason });
+            console.error("[Unhandled Rejection]", reason);
         });
 
-        process.on('uncaughtException', (error) => {
-            this.logger.error("Uncaught Exception", error);
-            process.exit(1);
+        process.on('uncaughtException', async (error) => {
+            console.error("[Uncaught Exception]", error);
+            try {
+                await this.sandbox.cleanupAll();
+            } finally {
+                process.exit(1);
+            }
         });
     }
 
     private setupToolHandlers() {
         this.server.setRequestHandler(ListToolsRequestSchema, async () => {
-            this.logger.debug("Handling list_tools request");
             return {
                 tools: [
                     {
@@ -114,8 +110,6 @@ class VectisServer {
         this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
             const toolName = request.params.name;
             const args = request.params.arguments;
-
-            this.logger.info(`Executing tool: ${toolName}`, { arguments: args });
 
             try {
                 let toolResult;
@@ -183,11 +177,9 @@ class VectisServer {
                         );
                 }
 
-                this.logger.info(`Tool ${toolName} completed successfully`);
                 return toolResult;
 
             } catch (error: any) {
-                this.logger.error(`Error executing tool: ${toolName}`, error);
                 return {
                     content: [
                         {
@@ -205,11 +197,8 @@ class VectisServer {
         await this.sandbox.init();
         const transport = new StdioServerTransport();
         await this.server.connect(transport);
-        this.logger.info("Vectis MCP server running on stdio transport");
     }
 }
 
 const server = new VectisServer();
-server.run().catch((err) => {
-    Logger.getInstance().error("Fatal server error", err);
-});
+server.run().catch(console.error);

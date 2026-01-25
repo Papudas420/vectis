@@ -3,17 +3,14 @@ import { promisify } from 'util';
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
-import { Logger } from './logger.js';
 
 const execAsync = promisify(exec);
 
 export class SandboxModule {
     private baseTempDir: string;
-    private logger: Logger;
 
     constructor() {
         this.baseTempDir = path.join(os.tmpdir(), 'vectis-sandbox');
-        this.logger = Logger.getInstance();
     }
 
     /**
@@ -23,7 +20,7 @@ export class SandboxModule {
         try {
             await fs.mkdir(this.baseTempDir, { recursive: true });
         } catch (error) {
-            this.logger.error('Error creating base temp dir:', error);
+            console.error('Error creating base temp dir:', error);
         }
     }
 
@@ -37,8 +34,6 @@ export class SandboxModule {
         await fs.mkdir(sessionDir, { recursive: true });
 
         try {
-            this.logger.info(`Installing skill: ${skillName} from ${repoUrl} into ${sessionDir}`);
-
             // Run npx skills add <repoUrl> -y in the session directory
             // -y will install all skills in that repo non-interactively
             await execAsync(`npx skills add ${repoUrl} -y`, {
@@ -51,14 +46,12 @@ export class SandboxModule {
             // Check if it exists in .agent/skills
             try {
                 await fs.access(skillPath);
-                this.logger.info(`Successfully installed ${skillName} to ${skillPath}`);
                 return { sessionDir, skillPath };
             } catch (e) {
-                this.logger.warn(`${skillName} not found in .agent/skills, using session root`);
                 return { sessionDir, skillPath: sessionDir };
             }
         } catch (error) {
-            this.logger.error(`Failed to install skill ${skillName} from ${repoUrl}:`, error);
+            console.error(`Failed to install skill ${skillName} from ${repoUrl}:`, error);
             throw new Error(`Installation failed: ${error}`);
         }
     }
@@ -68,7 +61,6 @@ export class SandboxModule {
      */
     async getSkillContent(skillDir: string): Promise<string> {
         try {
-            this.logger.debug(`Reading skill content from: ${skillDir}`);
             // If we got the skill directory directly
             const skillMdPath = path.join(skillDir, 'SKILL.md');
             try {
@@ -84,7 +76,7 @@ export class SandboxModule {
                 return 'SKILL.md not found in sandbox.';
             }
         } catch (error) {
-            this.logger.error('Error reading skill content:', error);
+            console.error('Error reading skill content:', error);
             return 'Could not read SKILL.md.';
         }
     }
@@ -94,10 +86,9 @@ export class SandboxModule {
      */
     async cleanup(sessionDir: string): Promise<void> {
         try {
-            this.logger.debug(`Cleaning up session directory: ${sessionDir}`);
             await fs.rm(sessionDir, { recursive: true, force: true });
         } catch (error) {
-            this.logger.error(`Failed to cleanup ${sessionDir}:`, error);
+            console.error(`Failed to cleanup ${sessionDir}:`, error);
         }
     }
 
@@ -106,11 +97,10 @@ export class SandboxModule {
      */
     async cleanupAll(): Promise<void> {
         try {
-            this.logger.info('Cleaning up all sandboxes...');
             await fs.rm(this.baseTempDir, { recursive: true, force: true });
             await this.init();
         } catch (error) {
-            this.logger.error('Failed to cleanup all sandboxes:', error);
+            console.error('Failed to cleanup all sandboxes:', error);
         }
     }
 }

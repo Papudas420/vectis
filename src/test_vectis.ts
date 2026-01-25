@@ -1,6 +1,5 @@
 import { DiscoveryModule } from './discovery.js';
 import { SandboxModule } from './sandbox.js';
-import { Logger } from './logger.js';
 
 async function test() {
     console.log('Testing Discovery Module...');
@@ -21,18 +20,17 @@ async function test() {
             await sandbox.init();
 
             const { repoUrl, skillName } = searchResults[0];
-            const logger = Logger.getInstance();
-            logger.info(`Installing skill: ${skillName} from ${repoUrl}`);
+            console.log(`Installing skill: ${skillName} from ${repoUrl}`);
 
             const { sessionDir, skillPath } = await sandbox.installSkill(repoUrl, skillName);
-            logger.info(`Installed to: ${skillPath}`);
+            console.log(`Installed to: ${skillPath}`);
 
             const content = await sandbox.getSkillContent(skillPath);
-            logger.info('Skill Content Preview:', content.substring(0, 200) + '...');
+            console.log('Skill Content Preview:', content.substring(0, 200) + '...');
 
-            logger.info('Cleaning up...');
+            console.log('Cleaning up...');
             await sandbox.cleanup(sessionDir);
-            logger.info('Cleanup done.');
+            console.log('Cleanup done.');
         }
     }
 }

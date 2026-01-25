@@ -1,7 +1,6 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { LRUCache } from 'lru-cache';
-import { Logger } from './logger.js';
 
 export interface SkillMetadata {
     url: string;
@@ -15,7 +14,6 @@ export interface SkillMetadata {
 export class DiscoveryModule {
     private sitemapUrl = 'https://skills.sh/sitemap.xml';
     private homepageUrl = 'https://skills.sh/';
-    private logger: Logger;
     private skillCache = new LRUCache<string, SkillMetadata[]>({
         max: 100,
         ttl: 1000 * 60 * 60 * 24, // 24 hours
@@ -25,9 +23,9 @@ export class DiscoveryModule {
     private popularityMap = new Map<string, number>();
 
     constructor() {
-        this.logger = Logger.getInstance();
         this.fetchPopularityData().catch(err => {
-            this.logger.error('Failed to initialize popularity data:', err);
+            // Silently fail or use console.error for discovery issues
+            console.error('Failed to initialize popularity data:', err);
         });
     }
 
@@ -36,7 +34,6 @@ export class DiscoveryModule {
      */
     private async fetchPopularityData(): Promise<void> {
         try {
-            this.logger.debug('Fetching popularity leaderboard from skills.sh...');
             const response = await axios.get(this.homepageUrl, { timeout: 15000 });
             const $ = cheerio.load(response.data);
 
@@ -61,10 +58,8 @@ export class DiscoveryModule {
                     }
                 }
             });
-
-            this.logger.info(`Initialized popularity data for ${this.popularityMap.size} skills`);
         } catch (error) {
-            this.logger.error('Error fetching popularity data:', error);
+            console.error('Error fetching popularity data:', error);
         }
     }
 
@@ -73,7 +68,6 @@ export class DiscoveryModule {
      */
     async getAllSkillUrls(): Promise<string[]> {
         try {
-            this.logger.debug('Fetching sitemap from skills.sh...');
             const response = await axios.get(this.sitemapUrl, { timeout: 10000 });
             const $ = cheerio.load(response.data, { xmlMode: true });
             const urls: string[] = [];
@@ -85,10 +79,9 @@ export class DiscoveryModule {
                 }
             });
 
-            this.logger.debug(`Found ${urls.length} skill URLs in sitemap`);
             return urls;
         } catch (error) {
-            this.logger.error('Error fetching sitemap:', error);
+            console.error('Error fetching sitemap:', error);
             return [];
         }
     }
