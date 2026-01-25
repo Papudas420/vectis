@@ -33,11 +33,14 @@ Add Vectis to your MCP settings (e.g., Claude Desktop or Cursor):
     "vectis": {
       "command": "node",
       "args": [
-        "C:/path/to/vectis/dist/index.js"
+        "[ABSOLUTE_PATH_TO_VECTIS]/dist/index.js"
       ]
     }
   }
 }
+
+> [!IMPORTANT]
+> Replace `[ABSOLUTE_PATH_TO_VECTIS]` with the actual full path where you cloned the repository on your machine.
 ```
 
 ## 🔧 Tools
