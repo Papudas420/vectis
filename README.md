@@ -12,13 +12,19 @@ Vectis is a powerful Model Context Protocol (MCP) server that connects AI agents
 
 ## 🛠️ Installation
 
+### Quick Start
+```bash
+git clone https://github.com/xenitV1/vectis.git
+cd vectis
+npm install
+npm run build
+```
+
 ### Prerequisites
 - [Node.js](https://nodejs.org/) (v18+)
-- [Git](https://git-scm.com/)
 - [skills-cli](https://skills.sh) (`npm install -g @skills/cli`)
 
 ### Configuration
-
 Add Vectis to your MCP settings (e.g., Claude Desktop or Cursor):
 
 ```json
