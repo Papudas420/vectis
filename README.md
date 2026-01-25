@@ -41,6 +41,18 @@ Add Vectis to your MCP settings (e.g., Claude Desktop or Cursor):
 
 > [!IMPORTANT]
 > Replace `[ABSOLUTE_PATH_TO_VECTIS]` with the actual full path where you cloned the repository on your machine.
+
+## 📜 Execution Protocol (Gold Standard)
+
+For the best results, the AI agent should always follow this protocol:
+
+1. **Search First**: Always use `search_skills` to find the most relevant and popular blueprint.
+2. **Download & Audit**: Use `execute_skill` to fetch instructions.
+3. **Check References**: If the skill details refer to other skills or external docs, follow them.
+4. **Script Retention**: If the skill contains **SCRIPTS** or complex automation logic:
+   - Set `keepSandbox: true`.
+   - Keep the skill available until the project is 100% finished.
+   - Manually call `clear_cache` only after the entire project is completed.
 ```
 
 ## 🔧 Tools

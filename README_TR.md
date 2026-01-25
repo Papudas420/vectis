@@ -43,6 +43,18 @@ Vectis'i MCP ayarlarınıza (örn. Claude Desktop veya Cursor) ekleyin:
 > [!IMPORTANT]
 > `[VECTIS_TAM_YOLU]` kısmını, depoyu bilgisayarınıza kopyaladığınız gerçek tam yol ile değiştirin.
 
+## 📜 Yürütme Protokolü (Altın Standart)
+
+En iyi sonuçlar için AI ajanının şu protokolü izlemesi önerilir:
+
+1. **Önce Ara**: En alakalı ve popüler taslağı bulmak için her zaman `search_skills` kullanın. Bu iş akışının İLK ADIMIDIR.
+2. **İndir ve İncele**: Talimatları çekmek için `execute_skill` kullanın.
+3. **Referansları Takip Et**: Eğer yetenek detayları başka yeteneklere veya belgelere atıfta bulunuyorsa, onları da kontrol edin.
+4. **Script Saklama**: Eğer yetenek **SCRIPTS** veya karmaşık otomasyon mantığı içeriyorsa:
+   - `keepSandbox: true` ayarını yapın.
+   - Proje %100 bitene kadar yeteneği silmeyin.
+   - Proje tamamen bittiğinde `clear_cache` ile temizlik yapın.
+
 ## 🔧 Araçlar (Tools)
 
 ### `search_skills`

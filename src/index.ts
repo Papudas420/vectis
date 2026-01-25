@@ -61,7 +61,7 @@ class VectisServer {
                 tools: [
                     {
                         name: "search_skills",
-                        description: "CRITICAL: Search skills.sh for professional blueprints, expert instructions, and best practices. Use this BEFORE starting any specialized task like 'creating a landing page', 'writing prompts', or 'architecting systems' to ensure output quality.",
+                        description: "CRITICAL: Search skills.sh for professional blueprints, expert instructions, and best practices. Use this BEFORE starting any specialized task like 'creating a landing page', 'writing prompts', or 'architecting systems' to ensure output quality. This is the FIRST STEP in the workflow.",
                         inputSchema: {
                             type: "object",
                             properties: {
@@ -75,7 +75,7 @@ class VectisServer {
                     },
                     {
                         name: "execute_skill",
-                        description: "MANDATORY: Fetches the full expert instructions for a specific skill found via search_skills. You MUST use this to read the detailed requirements and blueprints before generating any final code or design content.",
+                        description: "MANDATORY: Fetches the full expert instructions for a specific skill found via search_skills. You MUST use this to read the detailed requirements and blueprints before generating any final code or design content. PROTOCOL: (1) Check skill details for further references. (2) If the skill contains SCRIPTS or complex executable logical patterns, you MUST set 'keepSandbox' to true and keep it until the project is finished, then manually call 'clear_cache' at the VERY END.",
                         inputSchema: {
                             type: "object",
                             properties: {
@@ -89,7 +89,7 @@ class VectisServer {
                                 },
                                 keepSandbox: {
                                     type: "boolean",
-                                    description: "Whether to keep the sandbox files after reading. Default is false.",
+                                    description: "Whether to keep the sandbox files after reading. Set to TRUE if the skill contains SCRIPTS needed throughout the project.",
                                 },
                             },
                             required: ["repoUrl", "skillName"],
