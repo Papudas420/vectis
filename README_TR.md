@@ -65,3 +65,7 @@ Bu proje MIT Lisansı ile lisanslanmıştır - detaylar için [LICENSE](LICENSE)
 ## 📈 Yıldız Geçmişi (Star History)
 
 [![Star History Chart](https://api.star-history.com/svg?repos=xenitV1/vectis&type=Date)](https://star-history.com/#xenitV1/vectis&Date)
+
+## 👤 Hazırlayan
+
+**xenitV1** tarafından geliştirilmiştir. X üzerinden takip edin: [@xenit_v0](https://x.com/xenit_v0)

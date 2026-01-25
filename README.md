@@ -72,3 +72,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📈 Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=xenitV1/vectis&type=Date)](https://star-history.com/#xenitV1/vectis&Date)
+
+## 👤 Author
+
+Developed by **xenitV1**. Follow me on X: [@xenit_v0](https://x.com/xenit_v0)
